@@ -1,0 +1,38 @@
+version: '3.1'
+networks:
+  phuongtruong:
+    external: true
+services:
+  db:
+    image: mariadb
+    container_name: vno_mariadb
+    restart: always
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    stdin_open: true
+    tty: true
+    networks:
+      - phuongtruong
+
+  vno:
+    image: vno
+    container_name: vno_app
+    restart: always
+    ports:
+      - "8181:8181"
+    environment:
+      DB_URL: jdbc:mariadb://db:3306/vno
+      DB_HOST: localhost
+      DB_USER: root
+      DB_PASS: 123456
+      DB_NAME: vno
+      DEBUG: "true"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+    networks:
+      - phuongtruong
+

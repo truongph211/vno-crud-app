@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
+           xmlns:cxf="http://cxf.apache.org/blueprint/core"
+           xsi:schemaLocation="
+             http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+             http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd
+             http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd
+             ">
+    <cxf:bus>
+        <cxf:features>
+            <cxf:logging/>
+        </cxf:features>
+    </cxf:bus>
+
+    <jaxrs:server address="/api" id="vnoRest">
+        <jaxrs:serviceBeans>
+            <ref component-id="vnoRestBean"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref component-id="jsonProvider"/>
+            <ref component-id="jacksonContextResolver"/>
+        </jaxrs:providers>
+    </jaxrs:server>
+
+    <reference id="vnoService" interface="com.example.phuong.vno.service.VnoService" availability="mandatory"/>
+
+    <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+
+    <bean id="jacksonContextResolver" class="com.example.phuong.vno.provider.JacksonContextResolver"/>
+
+    <bean id="vnoRestBean" class="com.example.phuong.vno.restful.VnoServiceRest">
+        <argument ref="vnoService"/>
+    </bean>
+
+</blueprint>
